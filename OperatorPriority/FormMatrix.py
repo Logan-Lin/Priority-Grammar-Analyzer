@@ -16,15 +16,15 @@ class FormMatrix:
 
         self.print_grammar()
 
-        self.equal_matrix = self.cal_equal()
-        self.print_matrix(self.equal_matrix, "equal")
+        equal_matrix = self.cal_equal()
+        self.print_matrix(equal_matrix, "equal")
 
-        self.first_matrix = self.cal_matrix("firstvt")
-        self.print_matrix(self.first_matrix, "firstvt", columns=self.ts, index=self.non_ts)
-        self.last_matrix = self.cal_matrix("lastvt")
-        self.print_matrix(self.last_matrix, "lastvt", columns=self.ts, index=self.non_ts)
+        first_matrix = self.cal_matrix("firstvt")
+        self.print_matrix(first_matrix, "firstvt", columns=self.ts, index=self.non_ts)
+        last_matrix = self.cal_matrix("lastvt")
+        self.print_matrix(last_matrix, "lastvt", columns=self.ts, index=self.non_ts)
 
-        self.priority_matrix = self.construct_priority_matrix(self.first_matrix, self.last_matrix, self.equal_matrix)
+        self.priority_matrix = self.construct_priority_matrix(first_matrix, last_matrix, equal_matrix)
         self.print_priority(self.priority_matrix, "relationship")
 
         self.floyd_matrix = self.cal_floyd()

@@ -26,23 +26,23 @@ class FormMatrix:
         # Calculate LEAD, LAST and EQUAL matrix.
         self.symbols = self.gather_all_symbols()
         self.symbol_count = len(self.symbols)
-        self.lead_matrix = self.cal_matrix("lead")
-        self.last_matrix = self.cal_matrix("last")
+        lead_matrix = self.cal_matrix("lead")
+        last_matrix = self.cal_matrix("last")
         self.equal_matrix = self.cal_equal()
 
         # Calculate < (lower) and > (prior) matrix.
-        self.lower_matrix = np.dot(self.equal_matrix, self.lead_matrix)
-        self.lead_matrix_s = self.lead_matrix.copy()
-        np.fill_diagonal(self.lead_matrix_s, 1)
-        self.prior_matrix = self.last_matrix.T.dot(self.equal_matrix).dot(self.lead_matrix_s)
+        lower_matrix = np.dot(self.equal_matrix, lead_matrix)
+        lead_matrix_s = lead_matrix.copy()
+        np.fill_diagonal(lead_matrix_s, 1)
+        prior_matrix = last_matrix.T.dot(self.equal_matrix).dot(lead_matrix_s)
         for non_t in self.non_ts:
-            self.prior_matrix[:, self.symbols.index(non_t)] = 0
-            self.print_matrix(self.lower_matrix, "lower")
-        self.print_matrix(self.prior_matrix, "prior")
+            prior_matrix[:, self.symbols.index(non_t)] = 0
+            self.print_matrix(lower_matrix, "lower")
+        self.print_matrix(prior_matrix, "prior")
 
         # In relation matrix, 0 means N/A, 1 means prior, -1 means lower, 2 means equal.
         # relation_df is a more intuitive version, but not suitable for grammar analyzer.
-        self.relation_matrix = 2 * self.equal_matrix - self.lower_matrix + self.prior_matrix
+        self.relation_matrix = 2 * self.equal_matrix - lower_matrix + prior_matrix
         print("====Relation matrix====")
         relation_df = pd.DataFrame(self.relation_matrix, columns=self.symbols, index=self.symbols).applymap(
             lambda x: {0: "-", 1: ">", 2: "=", -1: "<"}[x])
