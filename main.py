@@ -1,12 +1,16 @@
+import os
+
 from OperatorPriority import FormMatrix as OFM
-from SimplePriority import FormMatrix as SFM
 from OperatorPriority import OperatorPriorityAn as OPA
+from SimplePriority import FormMatrix as SFM
 from SimplePriority import SimplePriorityAn as SPA
 from utils import init_grammar
-import os
 
 
 def main_menu():
+    """
+    Display main menu.
+    """
     while True:
         print("\n====选择文法种类====")
         print("1-简单优先分析")
@@ -25,6 +29,12 @@ def main_menu():
 
 
 def grammar_menu(grammar_type):
+    """
+    Display grammar reset and input series analysis menu.
+
+    :param grammar_type: int, indicate type of grammar.
+        1 for simple priority grammar, 2 for operator priority grammar.
+    """
     if grammar_type == 1:
         grammar = init_grammar(os.path.join("SimplePriority", "data", "grammar.txt"), "txt_file")
         form_matrix = SFM.FormMatrix(grammar)
@@ -32,7 +42,7 @@ def grammar_menu(grammar_type):
         grammar = init_grammar(os.path.join("OperatorPriority", "data", "grammar.txt"), "txt_file")
         form_matrix = OFM.FormMatrix(grammar)
 
-    header = {1: "简单", 2:"算符"}[grammar_type]
+    header = {1: "简单", 2: "算符"}[grammar_type]
     start_symbol = "E"
     while True:
         print("\n===={}优先分析====".format(header))
