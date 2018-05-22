@@ -186,11 +186,20 @@ class AnMapConstruct:
                             except KeyError:
                                 continue
 
-    def construct_map(self):
+    def construct_map(self, start_symbol='E', to_directory=None):
         """
         Construct LL(1) analysis sheet and write into a csv file.
+
+        :param start_symbol: str, start symbol of grammar.
+        :param to_directory: str, the directory to export analysis map.
         """
         # Gather all terminal symbol that would appear in a valid sentence.
+        if len(self.first_dict) == 0:
+            self.construct_first()
+
+        if len(self.follow_dict) == 0:
+            self.construct_follow(start_symbol)
+
         all_terminal = set()
         for first in self.first_dict.values():
             all_terminal |= first
@@ -221,7 +230,11 @@ class AnMapConstruct:
         print("====Analysis sheet detail====")
         print(an_df)
         print()
-        an_df.to_csv(os.path.join("data", "an_map.csv"), sep='`')
+
+        if to_directory is not None:
+            if not os.path.exists(to_directory):
+                os.makedirs(to_directory)
+            an_df.to_csv(os.path.join(to_directory, "an_map.csv"), sep='`')
 
     def print_grammar(self):
         """
