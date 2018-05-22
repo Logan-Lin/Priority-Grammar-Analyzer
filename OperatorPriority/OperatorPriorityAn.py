@@ -174,4 +174,4 @@ class OperatorPriorityAn:
 
 if __name__ == "__main__":
     an = OperatorPriorityAn(init_grammar(os.path.join("data", "grammar.txt"), "txt_file"))
-    an.scan_series("E", "i + i".split(" "))
+    an.scan_series("E", "i * i + i * ( i + i ) / i + i".split(" "))
