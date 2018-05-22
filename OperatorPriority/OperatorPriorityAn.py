@@ -25,6 +25,7 @@ def get_terminal_index(formula):
 
 class OperatorPriorityAn:
     def __init__(self, grammar):
+        self.scan_index = 0
         self.form_matrix = FormMatrix(grammar)
 
         self.ts = self.form_matrix.ts
@@ -109,11 +110,10 @@ class OperatorPriorityAn:
         stack = ["#"]
         input_series.append("#")
 
-        global scan_index
-        scan_index = 0
+        self.scan_index = 0
 
-        current = input_series[scan_index]
-        scan_index += 1
+        current = input_series[self.scan_index]
+        self.scan_index += 1
         self.print_stack(stack, current)
 
         while True:
@@ -126,9 +126,9 @@ class OperatorPriorityAn:
                     break
 
                 stack.append(current)
-                current = input_series[scan_index]
+                current = input_series[self.scan_index]
                 self.print_stack(stack, current)
-                scan_index += 1
+                self.scan_index += 1
 
             start_index = len(stack) - 1
             while True:
@@ -153,7 +153,7 @@ class OperatorPriorityAn:
             self.print_stack(stack, current, formulas)
 
             if non_t == start_symbol:
-                if not len(stack) == 2 or not scan_index == len(input_series):
+                if not (len(stack) == 2 and self.scan_index == len(input_series)):
                     continue
                 return
 
@@ -168,10 +168,11 @@ class OperatorPriorityAn:
             self.control(start_symbol, series)
             print("Input series '{}' valid!".format(" ".join(series[:-1])))
         except (KeyError, ValueError, IndexError) as e:
-            print("Error at position {}. {}".format(scan_index + 1, e))
+            print("Error at position {}. {}".format(self.scan_index + 1, e))
         print()
 
 
 if __name__ == "__main__":
     an = OperatorPriorityAn(init_grammar(os.path.join("data", "grammar.txt"), "txt_file"))
     an.scan_series("E", "i * i + i * ( i + i ) / i + i".split(" "))
+    an.scan_series("E", "i + i + i * i".split(" "))

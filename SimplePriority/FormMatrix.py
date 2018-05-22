@@ -21,7 +21,7 @@ class FormMatrix:
     def __init__(self, grammar):
         self.grammar = grammar
         self.non_ts = grammar[~grammar.index.duplicated(keep='first')].index
-        self.print_grammar()
+        # self.print_grammar()
 
         # Calculate LEAD, LAST and EQUAL matrix.
         self.symbols = self.gather_all_symbols()
@@ -37,16 +37,13 @@ class FormMatrix:
         prior_matrix = last_matrix.T.dot(self.equal_matrix).dot(lead_matrix_s)
         for non_t in self.non_ts:
             prior_matrix[:, self.symbols.index(non_t)] = 0
-            self.print_matrix(lower_matrix, "lower")
-        self.print_matrix(prior_matrix, "prior")
+        # self.print_matrix(lower_matrix, "lower")
+        # self.print_matrix(prior_matrix, "prior")
 
         # In relation matrix, 0 means N/A, 1 means prior, -1 means lower, 2 means equal.
         # relation_df is a more intuitive version, but not suitable for grammar analyzer.
         self.relation_matrix = 2 * self.equal_matrix - lower_matrix + prior_matrix
-        print("====Relation matrix====")
-        relation_df = pd.DataFrame(self.relation_matrix, columns=self.symbols, index=self.symbols).applymap(
-            lambda x: {0: "-", 1: ">", 2: "=", -1: "<"}[x])
-        print(relation_df)
+
 
     def print_grammar(self):
         """
@@ -63,6 +60,12 @@ class FormMatrix:
         print("===={} matrix====".format(name))
         print(df)
         print()
+
+    def print_relation_matrix(self, matrix, name):
+        print("===={} matrix====".format(name))
+        relation_df = pd.DataFrame(self.relation_matrix, columns=self.symbols, index=self.symbols).applymap(
+            lambda x: {0: "-", 1: ">", 2: "=", -1: "<"}[x])
+        print(relation_df)
 
     def get_all_formulas(self, non_t):
         """
@@ -110,9 +113,8 @@ class FormMatrix:
                 if result_plus[j, i] == 1:
                     for k in range(0, result.shape[0]):
                         result_plus[j, k] = result_plus[j, k] + result_plus[i, k]
-        print()
         result_plus = np.where(result_plus.copy() > 0, 1, result_plus)
-        self.print_matrix(result_plus, "{}+".format(matrix))
+        # self.print_matrix(result_plus, "{}+".format(matrix))
         return result_plus
 
     def cal_equal(self):
@@ -127,5 +129,5 @@ class FormMatrix:
                 chars = formula.split(" ")
                 for i in range(len(chars) - 1):
                     result[self.symbols.index(chars[i]), self.symbols.index(chars[i + 1])] = 1
-                self.print_matrix(result, "equal")
+                # self.print_matrix(result, "equal")
         return result

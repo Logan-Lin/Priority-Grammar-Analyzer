@@ -14,21 +14,21 @@ class FormMatrix:
         self.ts_count = len(self.ts)
         self.non_ts_count = len(self.non_ts)
 
-        self.print_grammar()
+        # self.print_grammar()
 
         equal_matrix = self.cal_equal()
-        self.print_matrix(equal_matrix, "equal")
+        # self.print_matrix(equal_matrix, "equal")
 
         first_matrix = self.cal_matrix("firstvt")
-        self.print_matrix(first_matrix, "firstvt", columns=self.ts, index=self.non_ts)
+        # self.print_matrix(first_matrix, "firstvt", columns=self.ts, index=self.non_ts)
         last_matrix = self.cal_matrix("lastvt")
-        self.print_matrix(last_matrix, "lastvt", columns=self.ts, index=self.non_ts)
+        # self.print_matrix(last_matrix, "lastvt", columns=self.ts, index=self.non_ts)
 
         self.priority_matrix = self.construct_priority_matrix(first_matrix, last_matrix, equal_matrix)
-        self.print_priority(self.priority_matrix, "relationship")
+        # self.print_priority(self.priority_matrix, "relationship")
 
         self.floyd_matrix = self.cal_floyd()
-        self.print_matrix(self.floyd_matrix, "floyd", columns=self.ts, index=self.floyd_index)
+        # self.print_matrix(self.floyd_matrix, "floyd", columns=self.ts, index=self.floyd_index)
 
     def print_grammar(self):
         """
@@ -142,9 +142,9 @@ class FormMatrix:
                     result[self.non_ts.index(non_t), self.ts.index(chars[index[0]])] = 1
                     stack.append((non_t, chars[index[0]]))
 
-        print("===={} matrix constructing stack====".format(matrix))
+        # print("===={} matrix constructing stack====".format(matrix))
         while len(stack) > 0:
-            print(stack)
+            # print(stack)
             top = stack[-1]
             del stack[-1]
             for non_t in self.get_non_t(top[0], matrix=matrix):
@@ -179,13 +179,12 @@ class FormMatrix:
                             # aU format, chars[i] is a, chars[i+1] is U.
                             result_lower[self.ts.index(chars[i]), firstvt[self.non_ts.index(chars[i + 1]), :] == 1] = -1
                             result_lower[self.ts.index("#"), firstvt[self.non_ts.index(chars[i + 1]), :] == 1] = -1
-        self.print_priority(result_prior, "prior")
-        self.print_priority(result_lower, "lower")
+        # self.print_priority(result_prior, "prior")
+        # self.print_priority(result_lower, "lower")
 
         # Check if there are any two symbols that have two relationships.
         if True in ((result_lower == -1) * (result_prior == 1)):
-            print("Grammar is not a valid operator priority grammar!")
-            exit(1)
+            raise ValueError("Grammar is not a valid operator priority grammar!")
         result = result + result_prior + result_lower
         result[-1, -1] = 3
         return result
