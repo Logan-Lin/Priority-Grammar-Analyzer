@@ -44,7 +44,6 @@ class FormMatrix:
         # relation_df is a more intuitive version, but not suitable for grammar analyzer.
         self.relation_matrix = 2 * self.equal_matrix - lower_matrix + prior_matrix
 
-
     def print_grammar(self):
         """
         Print out grammar formulas.

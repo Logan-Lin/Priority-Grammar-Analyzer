@@ -73,7 +73,7 @@ class SimplePriority:
             self.print_stack(stack, current)
 
             if non_t == start_symbol:
-                if not len(stack) == 2:
+                if not (len(stack) == 2 and scan_index == len(input_series)):
                     continue
                 return
 

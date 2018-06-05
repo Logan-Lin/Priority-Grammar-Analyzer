@@ -81,6 +81,11 @@ class OperatorPriorityAn:
         :raise: KeyError when it is unable to find corresponding non-terminal symbol.
         """
         t_in_formula = set()
+        if len(replacing_formula) == 1 and not replacing_formula.isupper():
+            for non_t in self.non_ts:
+                for formula in self.form_matrix.get_all_formulas(non_t):
+                    if formula == replacing_formula:
+                        return non_t, formula
         for char in replacing_formula.split(" "):
             if not char.isupper():
                 t_in_formula.add(char)
@@ -88,7 +93,8 @@ class OperatorPriorityAn:
             for formula in self.form_matrix.get_all_formulas(non_t):
                 try:
                     # Make sure that the formula contains operator we want to replace.
-                    if not t_in_formula.issubset(formula.split(" ")):
+                    if not (t_in_formula.issubset(formula.split(" ")) and
+                            len(formula.split(' ')) == len(replacing_formula.split(' '))):
                         raise ValueError
                     # Make sure that all operator are matched in place.
                     for index in get_terminal_index(replacing_formula):
@@ -174,5 +180,4 @@ class OperatorPriorityAn:
 
 if __name__ == "__main__":
     an = OperatorPriorityAn(init_grammar(os.path.join("data", "grammar.txt"), "txt_file"))
-    an.scan_series("E", "i * i + i * ( i + i ) / i + i".split(" "))
-    an.scan_series("E", "i + i + i * i".split(" "))
+    an.scan_series("E", "i * i".split(" "))

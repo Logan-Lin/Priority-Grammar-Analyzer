@@ -95,6 +95,10 @@ def grammar_menu(grammar_type):
             if grammar_type == 1:
                 form_matrix.print_relation_matrix(form_matrix.relation_matrix, "Relation")
             else:
+                form_matrix.print_matrix(form_matrix.first_matrix,
+                                         "firstvt", columns=form_matrix.ts, index=form_matrix.non_ts)
+                form_matrix.print_matrix(form_matrix.last_matrix,
+                                         "lastvt", columns=form_matrix.ts, index=form_matrix.non_ts)
                 form_matrix.print_priority(form_matrix.priority_matrix, "relationship")
                 form_matrix.print_matrix(form_matrix.floyd_matrix, "floyd",
                                          columns=form_matrix.ts, index=form_matrix.floyd_index)
